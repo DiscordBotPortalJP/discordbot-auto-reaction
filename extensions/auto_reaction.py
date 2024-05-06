@@ -43,7 +43,10 @@ class AutoReactionCog(commands.Cog):
         if emojis is None:
             return
         for emoji in emojis:
-            await message.add_reaction(emoji)
+            try:
+                await message.add_reaction(emoji)
+            except discord.errors.HTTPException:
+                pass
 
 
 async def setup(bot: commands.Bot) -> None:

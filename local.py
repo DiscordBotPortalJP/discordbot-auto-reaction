@@ -3,7 +3,7 @@ from discord.ext import commands
 from constants import TOKEN
 
 extensions = (
-    '',
+    'local',
 )
 
 class MyBot(commands.Bot):
