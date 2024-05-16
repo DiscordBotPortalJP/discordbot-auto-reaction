@@ -4,6 +4,7 @@ from constants import TOKEN
 
 extensions = (
     'auto_reaction',
+    'reaction_listup',
 )
 
 
