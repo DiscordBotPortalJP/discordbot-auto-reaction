@@ -68,6 +68,9 @@ class AutoReactionCog(commands.Cog):
     async def _reaction_for_channel_app_command(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
         emojis = get_emojis(interaction.channel.id)
+        if emojis is None:
+            await interaction.followup.send('リアクション設定がありません', ephemeral=True)
+            return
         await interaction.followup.send(
             'チャンネル内のすべてのメッセージにリアクションを付けます',
             embed=discord.Embed(title='設定中の絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
@@ -92,6 +95,9 @@ class AutoReactionCog(commands.Cog):
     async def reaction_for_single_message_from_menu(self, interaction: discord.Interaction, message: discord.Message):
         await interaction.response.defer(ephemeral=True)
         emojis = get_emojis(interaction.channel.id)
+        if emojis is None:
+            await interaction.followup.send('リアクション設定がありません', ephemeral=True)
+            return
         for emoji in get_emojis(interaction.channel.id):
             try:
                 await message.add_reaction(emoji)
