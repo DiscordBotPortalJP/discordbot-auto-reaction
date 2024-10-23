@@ -89,16 +89,16 @@ class AutoReactionCog(commands.Cog):
     @app_commands.guild_only()
     @excepter
     @dpylogger
-    async def reaction_for_single_message_from_menu(self, interaction: discord.Interaction):
+    async def reaction_for_single_message_from_menu(self, interaction: discord.Interaction, message: discord.Message):
         await interaction.response.defer(ephemeral=True)
         emojis = get_emojis(interaction.channel.id)
         for emoji in get_emojis(interaction.channel.id):
             try:
-                await interaction.message.add_reaction(emoji)
+                await message.add_reaction(emoji)
             except discord.errors.HTTPException:
                 pass
         await interaction.followup.send(
-            f'メッセージ {interaction.message.jump_url} にリアクションを付けました',
+            f'メッセージ {message.jump_url} にリアクションを付けました',
             embed=discord.Embed(title='設定中の絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
             ephemeral=True,
         )
