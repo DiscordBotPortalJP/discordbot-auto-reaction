@@ -56,7 +56,7 @@ class AutoReactionCog(commands.Cog):
     @app_commands.guild_only()
     @excepter
     @dpylogger
-    async def _reaction_for_channel_app_command(self, interaction: discord.Interaction):
+    async def _check_setting_reaction_app_command(self, interaction: discord.Interaction):
         emojis = get_emojis(interaction.channel.id)
         await interaction.response.send_message(
             embed=discord.Embed(title='設定した絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
