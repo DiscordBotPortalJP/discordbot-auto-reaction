@@ -14,6 +14,11 @@ from daug.constants import COLOUR_EMBED_GRAY
 class AutoReactionCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        self.ctx_menu = app_commands.ContextMenu(
+            name='リアクション補完',
+            callback=self.reaction_for_single_message_from_menu,
+        )
+        self.bot.tree.add_command(self.ctx_menu)
 
     @commands.Cog.listener()
     @excepter
@@ -50,7 +55,6 @@ class AutoReactionCog(commands.Cog):
             except discord.errors.HTTPException:
                 pass
 
-
     @app_commands.command(name='リアクション設定確認', description='現在設定されているリアクションを確認します')
     @app_commands.default_permissions(administrator=True)
     @app_commands.guild_only()
@@ -61,7 +65,6 @@ class AutoReactionCog(commands.Cog):
         await interaction.response.send_message(
             embed=discord.Embed(title='設定した絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
         )
-
 
     @app_commands.command(name='リアクション補完', description='チャンネル内のすべてのメッセージにリアクションを付けます')
     @app_commands.default_permissions(administrator=True)
@@ -84,6 +87,24 @@ class AutoReactionCog(commands.Cog):
                     pass
         await interaction.followup.send(
             'チャンネル内のすべてのメッセージにリアクションを付けました',
+            embed=discord.Embed(title='設定中の絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
+            ephemeral=True,
+        )
+
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.guild_only()
+    @excepter
+    @dpylogger
+    async def reaction_for_single_message_from_menu(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        emojis = get_emojis(interaction.channel.id)
+        for emoji in get_emojis(interaction.channel.id):
+            try:
+                await interaction.message.add_reaction(emoji)
+            except discord.errors.HTTPException:
+                pass
+        await interaction.followup.send(
+            f'メッセージ {interaction.message.jump_url} にリアクションを付けました',
             embed=discord.Embed(title='設定中の絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
             ephemeral=True,
         )
