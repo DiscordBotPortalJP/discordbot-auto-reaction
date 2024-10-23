@@ -2,7 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from utils import extract_emojis
-from utils.database import cache_emojis
 from utils.database import get_emojis
 from utils.database import upsert_emojis
 from utils.database import delete_emojis
@@ -19,11 +18,6 @@ class AutoReactionCog(commands.Cog):
             callback=self.reaction_for_single_message_from_menu,
         )
         self.bot.tree.add_command(self.ctx_menu)
-
-    @commands.Cog.listener()
-    @excepter
-    async def on_ready(self):
-        await cache_emojis()
 
     @commands.Cog.listener()
     @excepter
