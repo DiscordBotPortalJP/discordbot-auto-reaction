@@ -56,6 +56,9 @@ class AutoReactionCog(commands.Cog):
     @dpylogger
     async def _check_setting_reaction_app_command(self, interaction: discord.Interaction):
         emojis = get_emojis(interaction.channel.id)
+        if emojis is None:
+            await interaction.followup.send('リアクション設定がありません', ephemeral=True)
+            return
         await interaction.response.send_message(
             embed=discord.Embed(title='設定した絵文字', description=' '.join(emojis), colour=COLOUR_EMBED_GRAY),
         )
